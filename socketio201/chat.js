@@ -12,9 +12,20 @@ io.on("connection", (socket) => {
   socket.on("dataToServer", (dataFromClient) => {
     console.log(dataFromClient);
   });
-  socket.join('level1')
-  io.of('/').to('level1').emit('joined', `${socket.id} says I have joined the level 1 room!`);
- 
+  socket.on("newMessageToServer", (msg) => {
+    //   console.log(msg);
+    // io.emit("messageToClients", { text: msg.text });
+    io.of("/").emit("messageToClients", { text: msg.text }); // 위랑 같은말
+  });
+  /*  The server can still communicate across namespaces
+  but on the clientInformation, the socket needs be in THAR namespaces
+  in order to get the events */
+  setTimeout(() => {
+    io.of("/admin").emit(
+      "welcome",
+      "Welcome to the admin channel, form the main channel!"
+    );
+  }, 2000);
 });
 
 io.of("/admin").on("connection", (socket) => {
