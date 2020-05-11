@@ -1,10 +1,5 @@
 const socket = io("http://localhost:9000"); // the /namespace/endpoint
 
-console.log(socket.io);
-socket.on("connect", () => {
-  console.log(socket.id);
-});
-
 // listen for nslistm which is a list of all the namespace
 socket.on("nsList", (nsData) => {
   console.log("The list of namespaces has arrived!");
@@ -24,43 +19,6 @@ socket.on("nsList", (nsData) => {
       console.log(`${nsEndpoint} I should go to now`);
     });
   });
-  const nsSocket = io("http://localhost:9000/wiki");
-  nsSocket.on("nsRoomLoad", (nsRooms) => {
-    // console.log(nsRooms);
-    let roomList = document.querySelector(".room-list");
-    // <li onclick="joinRoom(1,2)"><span class="glyphicon glyphicon-lock"></span>Main Room</li>
-    roomList.innerHTML = "";
-    nsRooms.forEach((room) => {
-      let glpyh;
-      if (room.privateRoom) {
-        glpyh = "lock";
-      } else {
-        glpyh = "globe";
-      }
-      roomList.innerHTML += `<li class="room"><span class="glyphicon glyphicon-${glpyh}"></span>${room.roomTitle}</li>`;
-    });
-    // add click listener to each room
-    let roomNodes = document.getElementsByClassName('room');
-    Array.from(roomNodes).forEach((elem)=>{
-      elem.addEventListener('click',(e)=>{
-        console.log("Someone clicked on",e.target.innerText);                                                                                                                                                        
-      })
-    })
-  });
-});
-
-socket.on("messageFromServer", (dataFromServer) => {
-  console.log(dataFromServer);
-  socket.emit("dataToServer", { data: "Data from the Client!" });
-});
-
-document.querySelector("#message-form").addEventListener("submit", (e) => {
-  e.preventDefault();
-  const newMessage = document.querySelector("#user-message").value;
-  socket.emit("newMessageToServer", { text: newMessage });
-});
-
-socket.on("messageToClients", (msg) => {
-  console.log(msg);
-  document.querySelector("#messages").innerHTML += `<li>${msg.text}</li>`;
+  joinNs('/wiki');
+  
 });
