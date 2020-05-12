@@ -1,4 +1,5 @@
 const socket = io("http://localhost:9000"); // the /namespace/endpoint
+let nsSocket = "";
 
 // listen for nslistm which is a list of all the namespace
 socket.on("nsList", (nsData) => {
